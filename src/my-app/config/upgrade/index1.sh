@@ -6,15 +6,15 @@
 #
 # Usage:
 # non-recurring, make it executable
-# chmod a+x v03/src/my-app/config/upgrade.sh
+# chmod a+x v03/src/my-app/config/upgrade/index.sh
 # run the following each time; in this case, to upgrade from v03 to v04
-# ./v03/src/my-app/config/upgrade.sh v03 v04
+# ./v03/src/my-app/config/upgrade/index.sh v03 v04
 # -----------------------------------------------------------------------------
 # run the script while in the following directory
 # cd dropbox/swap/fuse
 
 # copy list of files to xfer, store them in a temp file in the dest directory
-cp $1/src/my-app/config/xfer.txt $2/files-to-xfer-temp.txt
+cp $1/src/my-app/config/upgrade/xfer.txt $2/files-to-xfer-temp.txt
 
 # navigate to destination directory
 cd $2
@@ -28,7 +28,7 @@ rm files-to-xfer-temp.txt
 cd ../$1
 # copy files listed in xfter.txt from source then paste to destination directories
 # ref: https://unix.stackexchange.com/a/481043/167174
-cpio -u --create < src/my-app/config/xfer.txt | (cd ../$2 && cpio --extract)
+cpio -u --create < src/my-app/config/upgrade/xfer.txt | (cd ../$2 && cpio --extract)
 
 # navigate back to parent directory
 cd ..
@@ -64,7 +64,7 @@ cp -r $1/src/store/reducers/my-reducers $2/src/store/reducers/my-reducers
 #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   
 
 # make this script executable for next run
-chmod a+x $2/src/my-app/config/upgrade.sh
+chmod a+x $2/src/my-app/config/upgrade/index.sh
 
 # navigate to destination directory
 cd $2
@@ -108,17 +108,17 @@ yarn start
 
 
 
-NOTES
-- add all new files to /src/my-app
-- ~@edit@~ remove (comment out) footer and rightSidePanel from <FuseLayout> in index.js
-- insert new logo in root/public/assets/images/logos/new-brand.svg
-- ~@edit@~ branding in src/main/MainNavbarHeader.js (2 places)
+# NOTES
+# - add all new files to /src/my-app
+# - ~@edit@~ remove (comment out) footer and rightSidePanel from <FuseLayout> in index.js
+# - insert new logo in root/public/assets/images/logos/new-brand.svg
+# - ~@edit@~ branding in src/main/MainNavbarHeader.js (2 places)
 
-1. /src/fuse-configs/fuseNavigationConfig.js -- duplicate(append: `-orig`); rewrite file
-3. /src/main/content/components/ComponentsConfig.js => /src/my-app/ComponentsConfig.js (now /src/my-app/config/ComponentsConfig.js)
-   - when editing routes in 3 (ComponentsConfig), make sure they match the url in 1 (fuseNavigationConfig).
-   - and that the redirectTo in 2 (fuseRoutesConfig) matches the first (home) route in both 1 (fuseNavigationConfig) and 3 (ComponentsConfig)
-4. note: home page redirection is via
-   A. /src/fuse-configs/fuseRoutesConfig.js
-   B. /src/main/content/apps/dashboards/analytics/AnalyticsDashboardAppConfig.js
-      note: to avoid collisions, might want to turn off this path/link connection at a later time
+# 1. /src/fuse-configs/fuseNavigationConfig.js -- duplicate(append: `-orig`); rewrite file
+# 3. /src/main/content/components/ComponentsConfig.js => /src/my-app/ComponentsConfig.js (now /src/my-app/config/ComponentsConfig.js)
+#    - when editing routes in 3 (ComponentsConfig), make sure they match the url in 1 (fuseNavigationConfig).
+#    - and that the redirectTo in 2 (fuseRoutesConfig) matches the first (home) route in both 1 (fuseNavigationConfig) and 3 (ComponentsConfig)
+# 4. note: home page redirection is via
+#    A. /src/fuse-configs/fuseRoutesConfig.js
+#    B. /src/main/content/apps/dashboards/analytics/AnalyticsDashboardAppConfig.js
+#       note: to avoid collisions, might want to turn off this path/link connection at a later time
