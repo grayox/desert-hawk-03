@@ -19,7 +19,7 @@ class FuseAuthorization extends Component {
 
   constructor(props) {
     super(props);
-    this.checkAuth();
+    // this.checkAuth();
   }
 
   componentDidUpdate(prevProps) {
@@ -32,26 +32,26 @@ class FuseAuthorization extends Component {
     }
   }
 
-  checkAuth() {
-    const matched = matchRoutes(this.props.routes, this.props.location.pathname)[0];
-    if (matched && matched.route.auth && matched.route.auth.length > 0) {
-      if (!matched.route.auth.includes(this.props.user.role)) {
-        redirect = true;
-        if (this.props.user.role === 'guest') {
-        // if (!this.props.loggedIn) { // my add
-          this.props.history.push({
-            pathname: '/login',
-            state: { redirectUrl: this.props.location.pathname }
-          });
-        }
-        else {
-          this.props.history.push({
-            pathname: '/'
-          });
-        }
-      }
-    }
-  }
+  // checkAuth() {
+  //   const matched = matchRoutes(this.props.routes, this.props.location.pathname)[0];
+  //   if (matched && matched.route.auth && matched.route.auth.length > 0) {
+  //     if (!matched.route.auth.includes(this.props.user.role)) {
+  //       redirect = true;
+  //       if (this.props.user.role === 'guest') {
+  //       // if (!this.props.loggedIn) { // my add
+  //         this.props.history.push({
+  //           pathname: '/login',
+  //           state: { redirectUrl: this.props.location.pathname }
+  //         });
+  //       }
+  //       else {
+  //         this.props.history.push({
+  //           pathname: '/'
+  //         });
+  //       }
+  //     }
+  //   }
+  // }
 
   shouldComponentUpdate(nextProps) {
     if (redirect) {
@@ -64,7 +64,9 @@ class FuseAuthorization extends Component {
   }
 
   render() {
-    const { children, loggedIn } = this.props; // loggedIn: my add
+    // uid forwards to dashboard,
+    // loggedIn makes you login before forwarding after every reload
+    const { children, loggedIn, uid } = this.props; // loggedIn, uid: my add
     // console.log('children\n', children);
     // debugger;
 
@@ -118,7 +120,8 @@ class FuseAuthorization extends Component {
       // works!
       // ref: https://reacttraining.com/react-router/web/api/Route/children-func
       <Route children={() => (
-        loggedIn ? children : (<Login />)
+        // loggedIn ? children : (<Login />)
+        uid ? children : (<Login />)
       )} />
 
       // end my add
@@ -131,10 +134,13 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mapStateToProps({ fuse, auth }) {
+  // begin my add
+  const { user, user: uid, login: {success: loggedIn}, } = auth;
   return {
-    user: auth.user,
-    loggedIn: auth.login.success, // my add
+    // user: auth.user,
+    user, uid, loggedIn,
   }
+  // end my add
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(FuseAuthorization));

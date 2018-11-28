@@ -40,6 +40,10 @@ class MainToolbar extends Component {
     {
         const {classes, toggleQuickPanel, user, logout, openChatPanel} = this.props;
         const {userMenu} = this.state;
+        // begin my add
+        const photoURL = (user && user.data && user.data.photoURL) || 'assets/images/avatars/Velazquez.jpg';
+        const displayName = (user && user.data && user.data.displayName[0]) || '';
+        // end my add
 
         return (
             <div className={classNames(classes.root, "flex flex-row")}>
@@ -51,25 +55,29 @@ class MainToolbar extends Component {
                 <div className="flex">
                     <FuseAnimate delay={300}>
                         <Button className="h-64" onClick={this.userMenuClick}>
-                            {(user.data.photoURL) ?
+                            {/* {(user.data.photoURL) ? */}
+                            {photoURL ? // my add
                                 (
-                                    <Avatar className="" alt="user photo" src={user.data.photoURL}/>
+                                    // <Avatar className="" alt="user photo" src={user.data.photoURL}/>
+                                    <Avatar className="" alt="user photo" src={photoURL}/> // my add
                                 )
                                 :
                                 (
                                     <Avatar className="">
-                                        {user.data.displayName[0]}
+                                        {/* {user.data.displayName[0]} */}
+                                        {displayName} {/*my add*/}
                                     </Avatar>
                                 )
                             }
 
                             <div className="hidden md:flex flex-col ml-12 items-start">
                                 <Typography component="span" className="normal-case font-600 flex">
-                                    {user.data.displayName}
+                                    {/* {user.data.displayName} */}
+                                    {displayName} {/*my add*/}
                                 </Typography>
-                                <Typography className="text-11 capitalize" color="textSecondary">
+                                {/* <Typography className="text-11 capitalize" color="textSecondary">
                                     {user.role}
-                                </Typography>
+                                </Typography> */}
                             </div>
 
                             <Icon className="text-16 ml-12 hidden sm:flex" variant="action">keyboard_arrow_down</Icon>
