@@ -5,10 +5,10 @@
 #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   
 
 # define variables
-OLD=$1
-NEW=$2
-PATH=$3
-# REPO=$4
+old=$1
+new=$2
+localpath=$3
+# remoterepo=$4
 
 # make this script executable for next run
-chmod a+x v$NEW/$PATH/clone.sh
+chmod a+x v$new/$localpath/clone.sh

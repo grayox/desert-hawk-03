@@ -5,13 +5,13 @@
 #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   
 
 # define variables
-OLD=$1
-NEW=$2
-PATH=$3
-REPO=$4
+old=$1
+new=$2
+localpath=$3
+remoterepo=$4
 
 # make this script executable for next run
-chmod a+x v$NEW/$PATH/git.sh
+chmod a+x v$new/$localpath/git.sh
 
 # /users/atlasgroup/Dropbox/GitNotes.txt
 # ITEM 4 - Shortcut procedure summary for backing up github remote repository
@@ -32,7 +32,7 @@ chmod a+x v$NEW/$PATH/git.sh
 #       # so use the following command instead (without the --bare flag)
 git init # initialize new git
 # git remote add origin https://github.com/grayox/desert-hawk-03 # sets first origin
-git remote add origin $REPO-$NEW # sets first origin
+git remote add origin $remoterepo-$new # sets first origin
 #   $ git remote -v    # double checks new remote directory location has been set correctly
 #   --- continue here with backup operations ---
 git add -A

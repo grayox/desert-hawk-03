@@ -9,6 +9,7 @@
 # chmod a+x v03/src/my-app/config/upgrade/index.sh
 # run the following each time; in this case, to upgrade from v03 to v04
 # ./v03/src/my-app/config/upgrade/index.sh 03 04
+# ./v03/src/my-app/config/upgrade/index.sh 02 03
 # -----------------------------------------------------------------------------
 # navigate to and run the script while in the following directory
 # cd dropbox/swap/fuse
@@ -16,43 +17,66 @@
 # init all scripts
 # chmod a+x ./src/my-app/config/upgrade/index.sh && chmod a+x ./src/my-app/config/upgrade/clone.sh && chmod a+x ./src/my-app/config/upgrade/copy.sh && chmod a+x ./src/my-app/config/upgrade/git.sh && chmod a+x ./src/my-app/config/upgrade/update.sh
 
-# step 0 of 6
+# step 0 of 7
 # define variables
-BACKUP=""
-TIMESTAMP=
-PATH="src/my-app/config/upgrade"
-REPO="https://github.com/grayox/desert-hawk"
-OLD=$1
-NEW=$2
+backup="archive" # name of directory (relative to where script is run from) where we will save backup/archive
+timestamp=$(date +%s) # unique name identifier to prevent accidental overwrites
+compareto="xfer.txt"
+localpath="src/my-app/config/upgrade"
+remoterepo="https://github.com/grayox/desert-hawk"
+old=$1 # 03
+new=$2 # 04
 
-# step 1 of 6
-# make backup tar file in case of accidental overwrite or deletion
-# ref: http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-5.html
-# ref: http://www.bic.mni.mcgill.ca/users/kate/Howto/tar_notes.html
-OF=$BACKUP-$(date +%Y%m%d).tgz
-tar -cZf $OF /home/me/
-# tar -xf myfile_20030617.tar # extract files
+# # step 1 of 7 (deprecated)
+# # make backup tar file in case of accidental overwrite or deletion
+# # ref: http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-5.html
+# # ref: http://www.bic.mni.mcgill.ca/users/kate/Howto/tar_notes.html
+# # tar -xf myfile_20030617.tar # extract files
+# # mkdir $backup-$timestamp
+# tar -cfzv backup-v$old-$timestamp.tgz v$old
+# # deprecate: use rsync instead
 
-# step 2 of 6
-# copy files and directories to upgraged version
-./v$OLD/$PATH/clone.sh $OLD $NEW $PATH
+# # step 1 of 7
+# # make backup archive in case of accidental overwrite or deletion
+# # ref: https://linux.die.net/man/1/rsync | https://stackoverflow.com/a/14789400/1640892
+# mkdir $backup-$timestamp/
+# rsync -av --progress v$old $backup-$timestamp/ \
+#   --exclude node_modules \
+#   --exclude coverage \
+#   --exclude build \
+#   # -n # test run
 
-# step 3 of 6
-# copy files and directories to upgraged version
-./v$OLD/$PATH/copy.sh $OLD $NEW $PATH
+# # step 2 of 7
+# # copy files and directories to upgraged version
+# ./v$old/$localpath/clone.sh $old $new $localpath
 
-# step 4 of 6
-# make this script executable for next run
-chmod a+x v$NEW/$PATH/index.sh
-# remember to include (the appropriate version of) the above command in every new file added here to the index.sh
+# # step 3 of 7
+# # compare files for changes
+# # compare all files in xfer.txt
+# # ref: https://unix.stackexchange.com/a/481182/167174
+# # md5 -r xfer.txt
+# while IFS= read -r filename;
+#   # do diff $old/"$filename-orig" $new/"$filename"; # verbose
+#   do [[ $(md5 $old/"$filename-orig") = $(md5 $new/"$filename") ]] || echo $filename differs; # boolean
+#   done < v$new/$localpath/$compareto
+#   # done < v$old/$localpath/$compareto
 
-# step 5 of 6
-# engage git tracking
-./v$OLD/$PATH/git.sh $OLD $NEW $PATH $REPO
+# # step 4 of 7
+# # copy files and directories to upgraged version
+# ./v$old/$localpath/copy.sh $old $new $localpath
 
-# step 6 of 6
-# update yarn and all dependencies, start server
-./v$OLD/$PATH/update.sh $OLD $NEW $PATH
+# # step 5 of 7
+# # make this script executable for next run
+# chmod a+x v$new/$localpath/index.sh
+# # remember to include (the appropriate version of) the above command in every new file added here to the index.sh
+
+# # step 6 of 7
+# # engage git tracking
+# ./v$old/$localpath/git.sh $old $new $localpath $remoterepo
+
+# # step 7 of 7
+# # update yarn and all dependencies, start server
+# ./v$old/$localpath/update.sh $old $new $localpath
 
 #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   
 
