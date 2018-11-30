@@ -11,6 +11,7 @@ cp v$old/$localpath/xfer.txt v$new/files-to-xfer-temp.txt
 cd v$new
 # rename certain files in destination directory
 # ref: https://unix.stackexchange.com/a/481334/167174
+# while read ; do mv "vx/$REPLY" "v03/${REPLY%.js}-orig.js" ; done < v03/src/my-app/config/upgrade/xfer.txt # non-recurring update
 while read ; do mv "$REPLY" "${REPLY%.js}-orig.js" ; done < files-to-xfer-temp.txt
 # cleanup
 rm files-to-xfer-temp.txt

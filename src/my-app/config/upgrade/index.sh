@@ -9,7 +9,6 @@
 # chmod a+x v03/src/my-app/config/upgrade/index.sh
 # run the following each time; in this case, to upgrade from v03 to v04
 # ./v03/src/my-app/config/upgrade/index.sh 03 04
-# ./v03/src/my-app/config/upgrade/index.sh 02 03
 # -----------------------------------------------------------------------------
 # navigate to and run the script while in the following directory
 # cd dropbox/swap/fuse
@@ -24,10 +23,21 @@ timestamp=$(date +%s) # unique name identifier to prevent accidental overwrites
 compareto="xfer.txt"
 localpath="src/my-app/config/upgrade"
 remoterepo="https://github.com/grayox/desert-hawk"
+targetrepo="https://github.com/withinpixels/fuse-react"
 old=$1 # 03
 new=$2 # 04
 
-# # step 1 of 7 (deprecated)
+# # # step 1 of 7
+# # # copy files and directories to upgraged version
+# # chmod a+x "v$old/$localpath/clone.sh"
+# # "./v$old/$localpath/clone.sh" $old $new $targetrepo
+# git clone "$targetrepo.git" "v$new"
+# git clone https://grayox@github.com/withinpixels/fuse-react v04
+# git clone https://withinpixels@github.com/withinpixels/fuse-react v04
+# git clone https://<username>:<password>@github.com/<ORG_NAME>/<PROJECT-NAME>.git
+# https://stackoverflow.com/q/53548940/1640892
+
+# # step 2 of 7 (deprecated)
 # # make backup tar file in case of accidental overwrite or deletion
 # # ref: http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-5.html
 # # ref: http://www.bic.mni.mcgill.ca/users/kate/Howto/tar_notes.html
@@ -36,7 +46,7 @@ new=$2 # 04
 # tar -cfzv backup-v$old-$timestamp.tgz v$old
 # # deprecate: use rsync instead
 
-# # step 1 of 7
+# # step 2 of 7
 # # make backup archive in case of accidental overwrite or deletion
 # # ref: https://linux.die.net/man/1/rsync | https://stackoverflow.com/a/14789400/1640892
 # mkdir $backup-$timestamp/
@@ -46,24 +56,38 @@ new=$2 # 04
 #   --exclude build \
 #   # -n # test run
 
-# # step 2 of 7
-# # copy files and directories to upgraged version
-# ./v$old/$localpath/clone.sh $old $new $localpath
-
 # # step 3 of 7
-# # compare files for changes
-# # compare all files in xfer.txt
-# # ref: https://unix.stackexchange.com/a/481182/167174
-# # md5 -r xfer.txt
-# while IFS= read -r filename;
-#   # do diff $old/"$filename-orig" $new/"$filename"; # verbose
-#   do [[ $(md5 $old/"$filename-orig") = $(md5 $new/"$filename") ]] || echo $filename differs; # boolean
-#   done < v$new/$localpath/$compareto
-#   # done < v$old/$localpath/$compareto
-
-# # step 4 of 7
 # # copy files and directories to upgraged version
 # ./v$old/$localpath/copy.sh $old $new $localpath
+
+# step 4 of 7
+# compare files for changes
+# compare all files in xfer.txt
+# ref: https://unix.stackexchange.com/a/481182/167174
+# md5 -r v03/README-orig.md
+# md5 -c <file1> <file2>
+# md5 v03/src/@fuse/components/FuseAuthorization/FuseAuthorization-orig.js \
+# md5 v04/src/@fuse/components/FuseAuthorization/FuseAuthorization.js
+# while IFS= read -r filename;
+#   # do diff $old/"$filename-orig" $new/"$filename"; # verbose
+#   do [[ $(md5 v$old/"$filename-orig") = $(md5 v$new/"$filename") ]] || echo $filename differs; # boolean
+#   done < v$old/$localpath/$compareto
+# ref: https://stackoverflow.com/a/965072/1640892
+while IFS= read -r fullfile; # path/to/foo.bar
+  do
+    filename="${fullfile##*/}" # foo.bar
+    pathto="${fullfile%/*}" # path/to
+    prefix="${filename%.*}"; # foo
+    extension="${filename##*.}" # bar
+    # echo fullfile: $fullfile;
+    # echo pathto: $pathto;
+    # echo filename: $filename;
+    # echo prefix: $prefix;
+    # echo extension: $extension;
+    md5 "v$old/$pathto/$prefix-orig.$extension"
+    md5 "v$new/$fullfile"
+    [[ $(md5 -q "v$old/$pathto/$prefix-orig.$extension") == $(md5 -q "v$new/$fullfile") ]] || echo differs: $fullfile; # boolean
+  done < v$old/$localpath/$compareto
 
 # # step 5 of 7
 # # make this script executable for next run

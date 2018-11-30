@@ -1,5 +1,5 @@
 public/assets/images/logos/fuse.svg
-README.md
+/README.md
 src/@fuse/components/FuseAuthorization/FuseAuthorization.js
 src/auth/Auth.js
 src/auth/store/actions/login.actions.js
