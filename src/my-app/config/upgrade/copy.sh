@@ -4,23 +4,51 @@
 
 #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   
 
+# define variables
+old=$1
+new=$2
+localpath=$3
+# remoterepo=$4
+compareto=$4 # xfer.txt
+temp="files-to-xfer-temp.txt"
+
 # copy list of files to xfer, store them in a temp file in the dest directory
-cp v$old/$localpath/xfer.txt v$new/files-to-xfer-temp.txt
+cp "v$old/$localpath/$compareto" "v$new/$temp"
 
 # navigate to destination directory
-cd v$new
+cd "v$new"
 # rename certain files in destination directory
 # ref: https://unix.stackexchange.com/a/481334/167174
 # while read ; do mv "vx/$REPLY" "v03/${REPLY%.js}-orig.js" ; done < v03/src/my-app/config/upgrade/xfer.txt # non-recurring update
-while read ; do mv "$REPLY" "${REPLY%.js}-orig.js" ; done < files-to-xfer-temp.txt
+while read
+  do
+    # mv "$REPLY" "${REPLY%.js}-orig.js"
+    fullfile="$REPLY" # path/to/foo.bar
+    filename="${fullfile##*/}" # foo.bar
+    pathto="${fullfile%/*}" # path/to
+    prefix="${filename%.*}"; # foo
+    extension="${filename##*.}" # bar
+    # echo "fullfile: $fullfile"
+    # echo "filename: $filename"
+    # echo "pathto: $pathto"
+    # echo "prefix: $prefix"
+    # echo "extension: $extension"
+    # echo "move from: $pathto/$prefix.$extension"
+    # echo "move to: $pathto/$prefix-orig.$extension"
+    mv "./$pathto/$prefix.$extension" "./$pathto/$prefix-orig.$extension"
+  done < $temp
 # cleanup
-rm files-to-xfer-temp.txt
+rm $temp
+# exit 1
+
+# copy README which was left out of above loop because it's path is in the root directory
+mv README.md README-orig.md
 
 # navigate to source directory
-cd ../v$old
+cd "../v$old"
 # copy files listed in xfter.txt from source then paste to destination directories
 # ref: https://unix.stackexchange.com/a/481043/167174
-cpio -u --create < $localpath/xfer.txt | (cd ../v$new && cpio --extract)
+cpio -u --create < "$localpath/$compareto" | (cd "../v$new" && cpio --extract)
 
 # navigate back to parent directory
 cd ..
@@ -50,12 +78,6 @@ cd ..
 # # to do the copy paste in a single command, omit the trailing slash from the source directory in the `cp` command as follows
 # cp -r v01/src/store/actions/my-actions v03/src/store/actions/my-actions && cp -r v01/src/store/reducers/my-reducers v03/src/store/reducers/my-reducers
 # # the following lines correctly implement the `cp` command to copy the directory contents and the directory itself
-
-# define variables
-old=$1
-new=$2
-localpath=$3
-# remoterepo=$4
 
 # remoterepo=$4# copy directories
 cp -r "v$old/src/my-app" "v$new/src/my-app"

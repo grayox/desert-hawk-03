@@ -28,14 +28,16 @@ while IFS= read -r fullfile; # path/to/foo.bar
     pathto="${fullfile%/*}" # path/to
     prefix="${filename%.*}"; # foo
     extension="${filename##*.}" # bar
-    # echo fullfile: $fullfile;
-    # echo pathto: $pathto;
-    # echo filename: $filename;
-    # echo prefix: $prefix;
-    # echo extension: $extension;
+    # echo "fullfile: $fullfile"
+    # echo "pathto: $pathto"
+    # echo "filename: $filename"
+    # echo "prefix: $prefix"
+    # echo "extension: $extension"
     md5 "v$old/$pathto/$prefix-orig.$extension"
     md5 "v$new/$fullfile"
-    [[ $(md5 -q "v$old/$pathto/$prefix-orig.$extension") == $(md5 -q "v$new/$fullfile") ]] || echo differs: $fullfile; # boolean
+    # [[ $(md5 -q "v$old/$pathto/$prefix-orig.$extension") == $(md5 -q "v$new/$fullfile") ]] || echo "differs: $fullfile"; # boolean
+    [[ $(md5 -q "v$old/$pathto/$prefix-orig.$extension") == $(md5 -q "v$new/$pathto/$prefix-orig.$extension") ]] \
+    || echo "differs: $fullfile"; # boolean
   done < v$old/$localpath/$compareto
 
 #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   

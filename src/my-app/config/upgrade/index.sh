@@ -8,6 +8,7 @@
 # non-recurring, make it executable
 # chmod a+x v03/src/my-app/config/upgrade/index.sh
 # run the following each time; in this case, to upgrade from v03 to v04
+# -----------------------------------------------------------------------------
 # ./v03/src/my-app/config/upgrade/index.sh 03 04
 # -----------------------------------------------------------------------------
 # navigate to and run the script while in the following directory
@@ -16,7 +17,7 @@
 # step 0 of 8
 # define variables
 backup="archive" # name of directory (relative to where script is run from) where we will save backup/archive
-timestamp=$(date +%s) # unique name identifier to prevent accidental overwrites
+timestamp="$(date +%s)" # unique name identifier to prevent accidental overwrites
 compareto="xfer.txt"
 localpath="src/my-app/config/upgrade"
 remoterepo="https://github.com/grayox/desert-hawk"
@@ -33,17 +34,7 @@ chmod a+x "v$old/src/my-app/config/upgrade/copy.sh"
 chmod a+x "v$old/src/my-app/config/upgrade/git.sh"
 chmod a+x "v$old/src/my-app/config/upgrade/update.sh"
 
-# # # step 2 of 8
-# # # copy files and directories to upgraged version
-# # chmod a+x "v$old/$localpath/clone.sh"
-# # "./v$old/$localpath/clone.sh" $old $new $targetrepo
-# git clone "$targetrepo.git" "v$new"
-# git clone https://grayox@github.com/withinpixels/fuse-react v04
-# git clone https://withinpixels@github.com/withinpixels/fuse-react v04
-# git clone https://<username>:<password>@github.com/<ORG_NAME>/<PROJECT-NAME>.git
-# https://stackoverflow.com/q/53548940/1640892
-
-# # step 3 of 8 (deprecated)
+# # step 2 of 8 (deprecated)
 # # make backup tar file in case of accidental overwrite or deletion
 # # ref: http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-5.html
 # # ref: http://www.bic.mni.mcgill.ca/users/kate/Howto/tar_notes.html
@@ -52,29 +43,39 @@ chmod a+x "v$old/src/my-app/config/upgrade/update.sh"
 # tar -cfzv backup-v$old-$timestamp.tgz v$old
 # # deprecate: use rsync instead
 
-# # step 3 of 8
-# # make backup archive in case of accidental overwrite or deletion
-# # ref: https://linux.die.net/man/1/rsync | https://stackoverflow.com/a/14789400/1640892
-# mkdir $backup-$timestamp/
-# rsync -av --progress v$old $backup-$timestamp/ \
-#   --exclude node_modules \
-#   --exclude coverage \
-#   --exclude build \
-#   # -n # test run
+# step 2 of 8
+# make backup archive in case of accidental overwrite or deletion
+# ref: https://linux.die.net/man/1/rsync | https://stackoverflow.com/a/14789400/1640892
+mkdir "v$old-$backup-$timestamp/"
+rsync -av --progress v$old "v$old-$backup-$timestamp/" \
+  --exclude node_modules \
+  --exclude coverage \
+  --exclude build \
+  # -n # test run
 
-# # step 4 of 8
-# # copy files and directories to upgraged version
-# ./v$old/$localpath/copy.sh $old $new $localpath
+# # # step 3 of 8 (optional)
+# # # clone remote upgrade to local repo or manually download and unzip prior to step 0
+# # chmod a+x "v$old/$localpath/clone.sh"
+# # "./v$old/$localpath/clone.sh" $old $new $targetrepo
+# git clone "$targetrepo.git" "v$new"
+# git clone https://grayox@github.com/withinpixels/fuse-react v04
+# git clone https://withinpixels@github.com/withinpixels/fuse-react v04
+# git clone https://<username>:<password>@github.com/<ORG_NAME>/<PROJECT-NAME>.git
+# https://stackoverflow.com/q/53548940/1640892
+
+# step 4 of 8
+# copy files and directories to upgraged version
+./v$old/$localpath/copy.sh $old $new $localpath $compareto
 
 # step 5 of 8
+# make this script executable for next run
+chmod a+x v$new/$localpath/index.sh
+# remember to include (the appropriate version of) the above command in every new file added here to the index.sh
+
+# step 6 of 8
 # compare files for changes
 # compare all files in xfer.txt
 ./v$old/$localpath/compare.sh $old $new $localpath $compareto
-
-# # step 6 of 8
-# # make this script executable for next run
-# chmod a+x v$new/$localpath/index.sh
-# # remember to include (the appropriate version of) the above command in every new file added here to the index.sh
 
 # # step 7 of 8
 # # engage git tracking

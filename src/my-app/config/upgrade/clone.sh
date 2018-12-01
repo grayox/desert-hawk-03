@@ -1,6 +1,7 @@
 #!/bin/bash
 #
 # Clone latest version of remote repo to local
+# clone remote upgrade to local repo or manually download and unzip
 
 #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   
 
