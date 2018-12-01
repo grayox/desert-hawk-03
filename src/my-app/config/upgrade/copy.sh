@@ -58,11 +58,11 @@ localpath=$3
 # remoterepo=$4
 
 # remoterepo=$4# copy directories
-cp -r v$old/src/my-app v$new/src/my-app
-cp -r v$old/src/store/actions/my-actions v$new/src/store/actions/my-actions
-cp -r v$old/src/store/reducers/my-reducers v$new/src/store/reducers/my-reducers
+cp -r "v$old/src/my-app" "v$new/src/my-app"
+cp -r "v$old/src/store/actions/my-actions" "v$new/src/store/actions/my-actions"
+cp -r "v$old/src/store/reducers/my-reducers" "v$new/src/store/reducers/my-reducers"
 
 #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   
 
 # make this script executable for next run
-chmod a+x v$new/$localpath/copy.sh
+chmod a+x "v$new/$localpath/copy.sh"
