@@ -11,10 +11,10 @@ localpath=$3
 # remoterepo=$4
 
 # make this script executable for next run
-chmod a+x v$new/$localpath/update.sh
+chmod a+x "v$new/$localpath/update.sh"
 
 # navigate to destination directory
-cd v$new
+cd "v$new"
 
 # upgrade yarn
 brew upgrade yarn
@@ -50,5 +50,5 @@ yarn add react-number-format # https://www.npmjs.com/package/react-number-format
 # git commit -m "first commit"
 # git push origin master
 
-# start dev server
-yarn start
+# return to home path
+cd ..
