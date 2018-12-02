@@ -44,9 +44,11 @@ rm $temp
 
 # copy README which was left out of above loop because it's path is in the root directory
 mv README.md README-orig.md
+cd ..
+cp v$old/README.md v$new/README.md
 
 # navigate to source directory
-cd "../v$old"
+cd "v$old"
 # copy files listed in xfter.txt from source then paste to destination directories
 # ref: https://unix.stackexchange.com/a/481043/167174
 cpio -u --create < "$localpath/$compareto" | (cd "../v$new" && cpio --extract)
