@@ -13,6 +13,9 @@ remoterepo=$4
 # make this script executable for next run
 chmod a+x v$new/$localpath/git.sh
 
+# navigate to local directory
+cd "v$new"
+
 # /users/atlasgroup/Dropbox/GitNotes.txt
 # ITEM 4 - Shortcut procedure summary for backing up github remote repository
 #   ------------ verify key backup operations ------------
@@ -56,3 +59,6 @@ git push -u origin master
 #        d. To show the dot files in the finder, use: COMMAND + SHIFT + .
 #   --- notes on git ---
 #   $ git remote remove old  # removes polymer-starter-kit from result of: git remove -v
+
+# navigate back to parent directory
+cd ..

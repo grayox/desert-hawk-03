@@ -17,6 +17,7 @@ cp "v$old/$localpath/$compareto" "v$new/$temp"
 
 # navigate to destination directory
 cd "v$new"
+
 # rename certain files in destination directory
 # ref: https://unix.stackexchange.com/a/481334/167174
 # while read ; do mv "vx/$REPLY" "v03/${REPLY%.js}-orig.js" ; done < v03/src/my-app/config/upgrade/xfer.txt # non-recurring update

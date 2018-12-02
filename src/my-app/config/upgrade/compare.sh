@@ -38,11 +38,10 @@ while IFS= read -r fullfile; # path/to/foo.bar
     newfile="v$new/$derivative"
     md5 "$oldfile"
     md5 "$newfile"
-    # [[ $(md5 -q "v$old/$pathto/$prefix-orig.$extension") == $(md5 -q "v$new/$fullfile") ]] || echo "differs: $fullfile"; # boolean
     [[ $(md5 -q "$oldfile") == $(md5 -q "$newfile") ]] || echo "differs: $derivative"; # boolean
   done < v$old/$localpath/$compareto
 
 #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   #   
 
 # make this script executable for next run
-chmod a+x "v$old/$localpath/compare.sh"
+chmod a+x "v$new/$localpath/compare.sh"
