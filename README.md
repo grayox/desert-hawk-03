@@ -1,9 +1,30 @@
 - - - - - BEGIN EDITS - - - - -
 
 #### update procedure - v04 - v1.2.7
-
-cd dropbox/swap/fuse
+----------------------------------------------
 ./v03/src/my-app/config/upgrade/index.sh 03 04
+----------------------------------------------
+
+checklist
+1. manually create new git repo here... https://github.com/new
+2. name new repo incrementally (e.g., desert-hawk-04)
+3. download new upgrade target to local machine at dropbox/swap/fuse
+4. in mac finder, rename upgrade target incrementally (e.g., v04)
+5. in src/my-app/config/upgrade/index.sh, ensure all variables are named correctly
+   e.g., and including: remoterepo="https://github.com/grayox/desert-hawk"
+6. edit final terminal command in three places to rename incrementally
+   e.g.
+   ./v03/src/my-app/config/upgrade/index.sh 03 04
+   becomes...
+   ./v04/src/my-app/config/upgrade/index.sh 04 05
+7. execute the below terminal commands   
+   terminal commands
+   --------------------
+   cd dropbox/swap/fuse
+   ----------------------------------------------
+   ./v03/src/my-app/config/upgrade/index.sh 03 04
+   ----------------------------------------------
+8. increment all commands here and in upgrade/index to avoid accidental overwrites
 
  #### update procedure - v03 - v1.2.6
 
