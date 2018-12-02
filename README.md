@@ -1,5 +1,10 @@
 - - - - - BEGIN EDITS - - - - -
 
+#### update procedure - v04 - v1.2.7
+
+cd dropbox/swap/fuse
+./v03/src/my-app/config/upgrade/index.sh 03 04
+
  #### update procedure - v03 - v1.2.6
 
 `cd dropbox/swap/fuse # first, navigate to this directory`
