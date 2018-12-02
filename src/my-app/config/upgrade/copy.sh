@@ -42,7 +42,7 @@ while read
 rm $temp
 # exit 1
 
-# copy README which was left out of above loop because it's path is in the root directory
+# deal with README which was left out of above loop because it's path is in the root directory
 mv README.md README-orig.md
 cd ..
 cp v$old/README.md v$new/README.md
